@@ -1,0 +1,67 @@
+/* CSS file */
+Application
+{
+	background-image: Embed(source="assets/img/bg.jpg");
+    background-position: center;
+    background-blend: normal;
+    background-size: “auto”;
+	border-skin: ClassReference( "com.degrafa.skins.CSSSkin" );
+}
+
+
+.New
+{
+	menuBtnStyleName : "mdiWindowMenuBtnNew";
+	styleNameFocus: "mdiStyleNameFocusNew";
+	styleNameNoFocus: "mdiStyleNameNoFocusNew";
+}
+
+.mdiWindowMenuBtnNew{
+	upSkin:        Embed(source="assets/img/icono_bam.png");
+	overSkin:      Embed(source="assets/img/icono_bam.png");
+	downSkin:      Embed(source="assets/img/icono_bam.png");
+	disabledSkin:  Embed(source="assets/img/icono_bam.png");
+}
+
+.mdiStyleNameFocusNew
+{
+	
+   borderColor: #0099ff;
+   borderAlpha: 0.90;
+   borderThicknessLeft: 4;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 4;
+   roundedBottomCorners: false;
+   highlightAlphas: 0.42, 0.1;
+   headerColors: #0033ff, #00ccff;
+   backgroundColor: #f5f5f5;
+   shadowDistance: 1;
+   shadowDirection: right;
+   dropShadowColor: #333333;
+   
+   letterSpacing: 1;
+   color: #000066;
+/*titleBackgroundSkin: Embed(source="assets/swf/WindowsAssets.swf", symbol="headerBgDefault");*/
+}
+
+.mdiStyleNameNoFocusNew
+{
+	borderColor: #0099ff;
+      borderThicknessLeft: 4;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 4;
+   roundedBottomCorners: false;
+   highlightAlphas: 0.42, 0.1;
+   headerColors: #0033ff, #00ccff;
+   backgroundColor: #f5f5f5;
+       shadowDistance: 1;
+   shadowDirection: right;
+   dropShadowColor: #333333;
+   
+   letterSpacing: 1;
+   color: #000066;
+/*	titleBackgroundSkin: Embed(source="assets/swf/WindowsAssets.swf", symbol="headerBgDefaultNoFocus");*/
+	
+}

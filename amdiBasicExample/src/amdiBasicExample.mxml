@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="absolute"
+	paddingTop="0"
+	paddingBottom="0"
+	paddingLeft="0"
+	paddingRight="0"
+	verticalGap="0"
+	horizontalGap="0"
+	xmlns:amdi="org.trueagile.amdi.containers.*"
+	creationComplete="{init();}" 
+	xmlns:local="*" 
+	viewSourceURL="srcview/index.html" 
+	xmlns:view="view.*" xmlns:appmenus="org.trueagile.amdi.containers.appmenus.*">
+
+
+	<mx:Script>
+		<![CDATA[
+			import mx.controls.Alert;
+			import mx.controls.Button;
+			import mx.controls.TextArea;
+			import mx.effects.Glow;
+			import mx.events.CloseEvent;
+			
+			import org.trueagile.amdi.effects.MDIEffectsDescriptorBase;
+			import org.trueagile.amdi.effects.effectsLib.MDILinearEffects;
+			import org.trueagile.amdi.effects.effectsLib.MDIRelationalEffects;
+			import org.trueagile.amdi.effects.effectsLib.MDIVistaEffects;
+			import org.trueagile.amdi.events.MDIManagerEvent;
+			import org.trueagile.amdi.events.MDIWindowEvent;
+			
+			import view.AreasExample;
+			import view.ColumnsExample;
+			import view.PiesExample;
+
+			private var cssURL:String;
+			private var confirm:Boolean =false;
+			private var queuedEvent:MDIManagerEvent;
+			private function init():void{
+				amdi.windowManager.addEventListener(MDIManagerEvent.APP_MENU_ITEM_CLICK,lisentApplicationMenu);
+				amdi.windowManager.addEventListener(MDIManagerEvent.WINDOW_CLOSE,confirmWindowClose);
+				amdi.windowManager.cascade();
+				amdi.menuButton.setStyle("rollOverEffect",glowOver);
+				amdi.menuButton.setStyle("rollOutEffect",glowOut);
+//				appbtt.imagePanel.setStyle("rollOverEffect",glowOver);
+//				appbtt.imagePanel.setStyle("rollOutEffect",glowOut);
+				/*behaivor example*/
+//				appbtt.userImage.addEventListener(MouseEvent.CLICK,showUserSomthing);
+//				appbtt.userImage.buttonMode=true;
+				var but:Button = new Button;
+				but.label = "dsf 第三方";
+				but.x = 50;
+				but.y = 50;
+				but.addEventListener(MouseEvent.CLICK,butClick);
+				systemManager.addChild(but);
+			}
+			
+			
+			private function butClick(event:MouseEvent):void{
+				Alert.show("你以为你是谁","提示");
+			}
+			
+			private function showUserSomthing(event:MouseEvent):void{
+				Alert.show("Some user info here","User info",4);
+			}
+			
+			[Bindable]
+            [Embed(source="assets/img/icono_bam.png")]
+            public var myTopIcon:Class;
+			
+			// the flex framework dispatches all kinds of events
+			// in order to avoid catching one of those and throwing a coercion error
+			// have your listener accept Event and check the type inside the function
+			// this is good practice for all Flex development, not specific to flexmdi
+			private function confirmWindowClose(event:Event):void
+			{
+				if(event is MDIManagerEvent && confirm)
+				{
+					// store a copy of the event in case we want to resume later (user confirms their intention)
+					queuedEvent = event.clone() as MDIManagerEvent;
+					
+					// this is the line that prevents the default behavior from executing as usual
+					// because the default handler checks event.isDefaultPrevented()
+					event.preventDefault();
+					
+					Alert.show("Seriously? Close it?", null, 3, null, handleAlertResponse);
+				}
+			}
+			// called when the Alert window is closed
+			// if the user said yes, we execute the default behavior of playing an effect
+			// and then removing the window by sending the stored event to
+			// the appropriately named executeDefaultBehavior() method
+			private function handleAlertResponse(event:CloseEvent):void
+			{
+				if(event.detail == mx.controls.Alert.YES)
+				{
+					amdi.windowManager.executeDefaultBehavior(queuedEvent);
+				}
+			}
+			
+			//Used to handle ApplicationMDI menu 
+			private function lisentApplicationMenu(event:MDIManagerEvent):void{
+				if (event.item != null ){
+					var action:String = event.item.@action;
+					switch(action){
+
+						case("addWindow"):
+							var window:MDIWindow = new MDIWindow();
+							var textWindow:TextArea=new TextArea();
+							textWindow.text = "Eu mauris dui at eget et nibh sit et platea Sed. Vitae neque Sed Sed rhoncus fames velit a massa cursus Pellentesque. Urna vel volutpat volutpat Praesent laoreet eget urna sagittis vitae tristique. Eu pretium Nam tincidunt Suspendisse mauris odio mus In id Curabitur. Dui Vivamus urna Quisque malesuada pretium Praesent mauris Nunc nibh hendrerit. Nam tincidunt elit iaculis dolor id convallis mattis magna.";							
+							textWindow.percentWidth=100;
+							textWindow.percentHeight=100;
+							window.title = "New Area Chart";
+							window.addChild(textWindow);
+							window.x=300;
+							window.y=300;
+							amdi.windowManager.add(window,true);					
+						break;
+
+						case("addWindowMenu"):
+							var windowM:MDIWindow = new MDIWindow();
+							var textWindow2:TextArea=new TextArea();
+							textWindow2.text = "Eu mauris dui at eget et nibh sit et platea Sed. Vitae neque Sed Sed rhoncus fames velit a massa cursus Pellentesque. Urna vel volutpat volutpat Praesent laoreet eget urna sagittis vitae tristique. Eu pretium Nam tincidunt Suspendisse mauris odio mus In id Curabitur. Dui Vivamus urna Quisque malesuada pretium Praesent mauris Nunc nibh hendrerit. Nam tincidunt elit iaculis dolor id convallis mattis magna.";							
+							textWindow2.percentWidth=100;
+							textWindow2.percentHeight=100;
+							windowM.title = "New Area Chart";
+							windowM.menuXML = windowMenu;
+							windowM.addChild(textWindow2);
+							windowM.windowStyleName= "New";
+							amdi.windowManager.add(windowM);						
+						break;
+
+						case("addArea"):
+							var windowArea:MDIWindow = new MDIWindow();
+							windowArea.title = "New Area Chart";
+							windowArea.menuXML = windowMenu;
+							windowArea.addChild(new AreasExample);
+							amdi.windowManager.add(windowArea);						
+						break;
+						case("addColumn"):
+							var windowColumn:MDIWindow = new MDIWindow();
+							windowColumn.title = "New Column Chart";
+							windowColumn.menuXML = windowMenu;
+							windowColumn.addChild(new ColumnsExample);
+							amdi.windowManager.add(windowColumn);						
+						break;
+						case("addPie"):
+							var windowPie:MDIWindow = new MDIWindow();
+							windowPie.title = "New Pie Chart";
+							windowPie.menuXML = windowMenu;
+							windowPie.addChild(new PiesExample);
+							amdi.windowManager.add(windowPie);						
+						break; 
+	            		case("title"):
+							amdi.windowManager.tile();						
+						break;
+	            		case("titleFill"):
+							amdi.windowManager.tile(true);						
+						break;																
+	            		case("cascade"):
+							amdi.windowManager.cascade();						
+						break;
+	            		case("restoreAll"):
+							amdi.windowManager.showAllWindows();						
+						break;
+	            		case("minimizeAll"):
+							amdi.windowManager.minimizeAll();						
+						break;
+	            		case("closeAll"):
+							amdi.windowManager.closeAll();						
+						break;
+	            		case("barTop"):
+							amdi.barPossition="top";						
+						break;
+	            		case("barBottom"):
+							amdi.barPossition="bottom";						
+						break;
+	                    case 'defaultStyle' :
+	                        StyleManager.unloadStyleDeclarations(cssURL, true);
+	                    break;
+	                    case 'exampleStyle' :
+	                        cssURL = "exampleStyle.swf";
+	                     	StyleManager.loadStyleDeclarations(cssURL);
+	                    break;
+	            		case("deafultEffects"):
+							amdi.effectsLib= org.trueagile.amdi.effects.MDIEffectsDescriptorBase as Class;						
+						break;
+	                    case 'vistaEffects' :
+	                        amdi.effectsLib= org.trueagile.amdi.effects.effectsLib.MDIVistaEffects as Class;
+	                    break;
+	                    case 'linearEffects' :
+	                     	amdi.effectsLib= org.trueagile.amdi.effects.effectsLib.MDILinearEffects as Class;
+	                    break;                    
+	                    case "confirmClose" :
+	                    	if (event.item.@toggled=="true"){
+	                    		this.confirm=true;	
+	                    	}else{
+	                    		this.confirm=false;	
+	                    	}
+	                    break;
+	                    case "applicationCM" :
+	                    	if (event.item.@toggled=="true"){
+	                    		amdi.applicationCTXM=true;	
+	                    	}else{
+	                    		amdi.applicationCTXM=false;	
+	                    	}
+	                    break;
+	                    case "windowCM" :
+	                    	if (event.item.@toggled=="true"){
+	                    		amdi.windowCTXM=true;	
+	                    	}else{
+	                    		amdi.windowCTXM=false;	
+	                    	}
+	                    break;
+	                    case("colapseBar"):
+	                    	if (event.item.@toggled=="true"){
+								amdi.colapseBar=true;
+							}else{
+								amdi.colapseBar=false;
+							}				
+						break;    
+	            		case("viewCarousel"):
+							amdi.windowShowStyle=MDIApplication.CAROUSEL_CONTAINER;						
+						break;
+	            		case("viewHCover"):
+							amdi.windowShowStyle=MDIApplication.COVER_FLOW_CONTAINER;
+						break;
+	            		case("viewVCover"):
+							amdi.windowShowStyle=MDIApplication.VCOVER_FLOW_CONTAINER;
+						break;
+	            		case("viewVista"):
+							amdi.windowShowStyle=MDIApplication.VISTA_FLOW_CONTAINER;
+						break;																									                                        
+					}
+				}
+				
+			}
+			
+
+			protected function mdiwindow1_menuItemClickHandler(event:MDIWindowEvent):void
+			{
+				Alert.show(event.item as String);
+			}
+
+		]]>
+	</mx:Script>
+
+	<mx:Glow id="glowOver" alphaFrom="0" alphaTo="1" blurXFrom="0" blurYFrom="0" blurXTo="12" blurYTo="12"/>
+	<mx:Glow id="glowOut" alphaFrom="1" alphaTo="0" blurXFrom="12" blurYFrom="12" blurXTo="0" blurYTo="0"/>
+
+	<mx:XML id="appMenu">
+		<root>
+		    <menuitem label="Context Functions">
+	            <menuitem label="Title" action="title"/>
+	            <menuitem label="Title Fill" action="titleFill"/>
+	            <menuitem label="Cascade" action="cascade"/>
+				<menuitem label="Restore all" action="restoreAll"/>
+				<menuitem label="Minimize All" action="minimizeAll"/>
+	            <menuitem label="Close All" action="closeAll"/>	            
+            </menuitem>
+            <menuitem label="Styles">
+	            <menuitem label="Default" action="defaultStyle"/>
+	            <menuitem label="Example Style" action="exampleStyle"/>
+			</menuitem>
+            <menuitem label="Effects">
+	            <menuitem label="Default" action="deafultEffects"/>
+	            <menuitem label="Vista" action="vistaEffects"/>
+	            <menuitem label="Linear" action="linearEffects"/>
+			</menuitem>
+            <menuitem label="Add Window" action="addWindow"/>
+            <menuitem label="Add with new Style" action="addWindowMenu"/>
+            <menuitem label="Add Area Chart" action="addArea"/>
+            <menuitem label="Add Clumn Chart" action="addColumn"/>
+            <menuitem label="Show Views">
+	            <menuitem label="Carousel" action="viewCarousel"/>
+	            <menuitem label="Horizontal" action="viewHCover"/>
+	            <menuitem label="Vertical" action="viewVCover"/>
+	            <menuitem label="Vista" action="viewVista"/>
+			</menuitem>			
+            <menuitem label="Config">
+	            <menuitem label="Top" action="barTop"/>
+	            <menuitem label="Bottom" action="barBottom"/>
+	            <menuitem label="Colapse Bar" type="check" toggled="false" action="colapseBar"/>
+	            <menuitem label="Confirm Close" type="check" toggled="false" action="confirmClose"/>
+	            <menuitem label="Application Context Menu" type="check" toggled="true" action="applicationCM"/>
+	            <menuitem label="Window Context Menu" type="check" toggled="true" action="windowCM"/>
+			</menuitem>
+            <menuitem label="Add Pie Chart" action="addPie"/>				                       
+        </root>
+	</mx:XML>
+
+
+	<mx:XML id="windowMenu">
+		    <root>
+            <menuitem label="MenuItem A">
+                <menuitem label="SubMenuItem A-1" enabled="false"/>
+                <menuitem label="SubMenuItem A-2"/>
+            </menuitem>
+            <menuitem label="MenuItem B" type="check" toggled="true"/>
+            <menuitem label="MenuItem C" type="check" toggled="false"/>
+            <menuitem type="separator"/>     
+            <menuitem label="MenuItem D" icon="myTopIcon">
+                <menuitem label="SubMenuItem D-1" type="radio" 
+                    groupName="one"/>
+                <menuitem label="SubMenuItem D-2" type="radio" 
+                    groupName="one" toggled="true"/>
+                <menuitem label="SubMenuItem D-3" type="radio" 
+                    groupName="one"/>
+            </menuitem>
+        </root>
+	</mx:XML>
+	<mx:Style source="newStyleWindows.css"/>
+	<mx:Label id="labelSE" text="Press SHIFT+ENTER" fontSize="16" fontWeight="bold" 
+		y="{amdi.height/2}"
+		x="{amdi.width/2-labelSE.width/2}"/>
+	<amdi:MDIApplication
+			id="amdi"
+			horizontalScrollPolicy="auto" 
+			verticalScrollPolicy="auto"
+			width="100%" 
+			height="100%" 
+			backgroundColor="#FFFFFF" 
+			backgroundAlpha="0"
+			effectsLib="org.trueagile.amdi.effects.effectsLib.MDIVistaEffects"
+			menuXML="{appMenu}"
+			barPossition="{MDIApplication.BOTTON_POSITON}"
+			colapseBar="false"
+			appBarHeight="40"
+			enforceBoundaries="false"
+			windowShowStyle="{MDIApplication.CAROUSEL_CONTAINER}">
+	
+			<amdi:applicationMenu>
+				<appmenus:SubStyleApplicationMenu mdiApplication="{amdi}" userName="Some Name" userImageSrc="assets/img/flower.jpg" />
+			</amdi:applicationMenu>
+	
+			<!--			
+			<amdi:applicationMenu>
+				<appmenus:BasicMenu mdiApplication="{amdi}"/>
+			</amdi:applicationMenu>
+			-->
+
+			<amdi:rigthControls>
+				<mx:HBox>
+					<view:Clock/>
+					<mx:Label text="李银河"/>
+				</mx:HBox>
+			</amdi:rigthControls>
+			<amdi:initialWindows>
+				<amdi:MDIWindow title="Window StartUp 4" x="10" y="10" menuXML="{windowMenu}">
+					<mx:Panel id="TmPanel" width="500" height="300"/>
+				</amdi:MDIWindow>	
+				<amdi:MDIWindow title="Window StartUp 5" x="10" y="10" windowStyleName="New">
+					<mx:TextArea width="100%" height="100%"
+					text="Eu mauris dui at eget et nibh sit et platea Sed. Vitae neque Sed Sed rhoncus fames velit a massa cursus Pellentesque. Urna vel volutpat volutpat Praesent laoreet eget urna sagittis vitae tristique. Eu pretium Nam tincidunt Suspendisse mauris odio mus In id Curabitur. Dui Vivamus urna Quisque malesuada pretium Praesent mauris Nunc nibh hendrerit. Nam tincidunt elit iaculis dolor id convallis mattis magna."/>
+				</amdi:MDIWindow>	
+				<amdi:MDIWindow title="Window StartUp 1" x="10" y="10" menuXML="{windowMenu}" menuItemClick="mdiwindow1_menuItemClickHandler(event)">
+					<view:AreasExample/>
+				</amdi:MDIWindow>
+				<amdi:MDIWindow title="Window StartUp 2" x="10" y="10" menuXML="{windowMenu}">
+					<view:ColumnsExample/>
+				</amdi:MDIWindow>
+				<amdi:MDIWindow title="Window StartUp 3" x="10" y="10" menuXML="{windowMenu}">
+					<view:PiesExample/>	
+				</amdi:MDIWindow>															
+			</amdi:initialWindows>
+	</amdi:MDIApplication>
+</mx:Application>
+

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:PieChart xmlns:mx="http://www.adobe.com/2006/mxml"        dataProvider="{expenses}" 
+        showDataTips="true" width="100%" height="100%"
+     >
+
+<mx:Script>
+	<![CDATA[
+			    import mx.collections.ArrayCollection;
+
+     [Bindable]
+     public var expenses:ArrayCollection = new ArrayCollection([
+        {Expense:"Taxes", Amount:2000},
+        {Expense:"Rent", Amount:1000},
+        {Expense:"Bills", Amount:100},
+        {Expense:"Car", Amount:450},
+        {Expense:"Gas", Amount:100},
+        {Expense:"Food", Amount:200}
+     ]);
+	]]>
+</mx:Script>
+
+        <mx:series>
+           <!--explodeRadius is a number between 0 and 1.-->
+           <mx:PieSeries
+                field="Amount"
+                nameField="Expense"
+                explodeRadius=".12"
+           />
+        </mx:series>
+
+</mx:PieChart>

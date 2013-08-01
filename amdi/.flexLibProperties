@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="false" version="1">
+  <includeClasses>
+    <classEntry path="org.trueagile.amdi.containers.MDIApplication"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIApplicationBar"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIApplicationMenuButton"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindow"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindowControlsContainer"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindowMenuButton"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindowShow"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindowState"/>
+    <classEntry path="org.trueagile.amdi.containers.MDIWindowsBar"/>
+    <classEntry path="org.trueagile.amdi.containers.appmenus.ApplicationMenu"/>
+    <classEntry path="org.trueagile.amdi.containers.appmenus.BasicMenu"/>
+    <classEntry path="org.trueagile.amdi.containers.appmenus.SubStyleApplicationMenu"/>
+    <classEntry path="org.trueagile.amdi.containers.appmenus.SubStyleMenu"/>
+    <classEntry path="org.trueagile.amdi.effects.IMDIEffectsDescriptor"/>
+    <classEntry path="org.trueagile.amdi.effects.MDIEffectsDescriptorBase"/>
+    <classEntry path="org.trueagile.amdi.effects.effectClasses.MDIGroupEffectItem"/>
+    <classEntry path="org.trueagile.amdi.effects.effectsLib.MDILinearEffects"/>
+    <classEntry path="org.trueagile.amdi.effects.effectsLib.MDIRelationalEffects"/>
+    <classEntry path="org.trueagile.amdi.effects.effectsLib.MDIVistaEffects"/>
+    <classEntry path="org.trueagile.amdi.events.MDIManagerEvent"/>
+    <classEntry path="org.trueagile.amdi.events.MDIWindowEvent"/>
+    <classEntry path="org.trueagile.amdi.managers.MDIManager"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorTLBR.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorTLBR.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorV.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorV.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeHandler.png" sourcePath="org/trueagile/amdi/assets/img/resizeHandler.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorH.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorH.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorVH.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorVH.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorTRBL.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorTRBL.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/windowMenuButton.png" sourcePath="org/trueagile/amdi/assets/img/windowMenuButton.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursor.png" sourcePath="org/trueagile/amdi/assets/img/resizeCursor.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/applicationMenuButton.png" sourcePath="org/trueagile/amdi/assets/img/applicationMenuButton.png"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>

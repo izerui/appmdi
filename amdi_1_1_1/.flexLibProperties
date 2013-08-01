@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexLibProperties includeAllClasses="true" useMultiPlatformConfig="false" version="3">
+  <includeClasses>
+    <classEntry path="org.trueagile.amdi.events.DesktopRightClickEvent"/>
+  </includeClasses>
+  <includeResources>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorTLBR.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorTLBR.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/maximizeButton.png" sourcePath="org/trueagile/amdi/assets/img/maximizeButton.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorH.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorH.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/restoreButton.png" sourcePath="org/trueagile/amdi/assets/img/restoreButton.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorVH.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorVH.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/windowMenuButton.png" sourcePath="org/trueagile/amdi/assets/img/windowMenuButton.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/minimizeButton.png" sourcePath="org/trueagile/amdi/assets/img/minimizeButton.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/user.png" sourcePath="org/trueagile/amdi/assets/img/user.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorV.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorV.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeHandler.png" sourcePath="org/trueagile/amdi/assets/img/resizeHandler.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursorTRBL.gif" sourcePath="org/trueagile/amdi/assets/img/resizeCursorTRBL.gif"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/resizeCursor.png" sourcePath="org/trueagile/amdi/assets/img/resizeCursor.png"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/applicationMenuButton.png" sourcePath="org/trueagile/amdi/assets/img/applicationMenuButton.png"/>
+    <resourceEntry destPath="licence.txt" sourcePath="licence.txt"/>
+    <resourceEntry destPath="org/trueagile/amdi/assets/img/closeButton.png" sourcePath="org/trueagile/amdi/assets/img/closeButton.png"/>
+  </includeResources>
+  <namespaceManifests/>
+</flexLibProperties>

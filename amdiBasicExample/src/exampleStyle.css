@@ -1,0 +1,247 @@
+Application
+{
+	background-image: Embed(source="assets/img/wallpaperWin.jpg");
+	
+}
+
+MDIApplication
+{
+	appBarStyleName: "mdiAppBar";
+	appMenuBtnStyleName: "mdiAppMenuBtn";
+}
+
+.mdiAppBar{
+	cornerRadius: 0;
+	fillAlphas: 1.0, 1.0;
+	fillColors: #0033ff, #00ccff;
+}
+
+.mdiAppMenuBtn{
+	upSkin:        Embed(source="assets/img/windowMenu.png");
+	overSkin:      Embed(source="assets/img/windowMenu.png");
+	downSkin:      Embed(source="assets/img/windowMenu.png");
+	disabledSkin:  Embed(source="assets/img/windowMenu.png");
+}
+
+MDISubStyleMenu{
+	appMenuStyleName: "appSubStyleMenu";
+	appSubMenuStyleName: "appSubMenu";
+	appVBoxMenuStyleName: "appVBoxMenu";
+/*	
+	appImagePanelStyleName: "appImagePanel";
+	appLabelStyleName: "appLabel";
+*/
+}
+
+.appVBoxMenu{
+	borderStyle:"solid";
+	borderThickness:1;
+	cornerRadius:10;
+	backgroundColor:#00ccff;
+	backgroundAlpha:0.85;
+	borderColor:#0099ff;
+}
+
+.appSubStyleMenu{
+	rollOverColor:#A5A5A5;
+	selectionColor:vE0E0E0;
+	borderThickness:2;
+	fontSize:11;
+	paddingTop:6;
+	paddingBottom:6;
+	openDuration:0;
+	borderStyle:"none";
+	color:#FFFFFF;
+	backgroundAlpha:0.0;
+	dropShadowEnabled:false;
+}
+
+.appSubMenu{
+	rollOverColor:#A5A5A5;
+	selectionColor:vE0E0E0;
+	backgroundColor:#00ccff;
+	borderColor:#0099ff;
+	cornerRadius:6;
+	borderThickness:2;
+	fontSize:11;
+	paddingTop:6;
+	paddingBottom:6;
+	openDuration:0;
+	borderStyle:"solid";
+	color:#FFFFFF;
+	backgroundAlpha:0.85;
+	dropShadowEnabled:false;		
+}
+
+MDIBasicMenu{
+	appMenuStyleName: "appMenu";
+}
+
+.appMenu{
+			rollOverColor:#A5A5A5;
+			selectionColor:vE0E0E0;
+			backgroundColor:#00ccff;
+			borderColor:#0099ff;
+			cornerRadius:6;
+			borderThickness:2;
+			fontSize:11;
+			paddingTop:6;
+			paddingBottom:6;
+			openDuration:0;
+			borderStyle:"solid";
+			color:#FFFFFF;
+			backgroundAlpha:0.85;
+			dropShadowEnabled:false;	
+}
+
+MDIWindow
+{
+	windowControlsClass: ClassReference("windowControls.ExampleControls");
+	titleStyleName: "winXPTitleStyle";
+	minimizeBtnStyleNameNoFocus: "mdiWindowMinimizeBtnNoFocus";
+	maximizeBtnStyleNameNoFocus: "mdiWindowMaximizeBtnNoFocus";
+	restoreBtnStyleNameNoFocus: "mdiWindowRestoreBtnNoFocus";
+	closeBtnStyleNameNoFocus: "mdiWindowCloseBtnNoFocus";
+	menuBtnStyleName : "mdiWindowMenuBtn";
+	menuStyleName : "mdiWindowMenu";
+}
+
+.mdiWindowMenu{
+	rollOverColor:#A5A5A5;
+	selectionColor:vE0E0E0;
+	backgroundColor:#00ccff;
+	borderColor:#0099ff;
+	cornerRadius:6;
+	borderThickness:2;
+	fontSize:11;
+	paddingTop:6;
+	paddingBottom:6;
+	openDuration:0;
+	borderStyle:"solid";
+	color:#FFFFFF;
+	backgroundAlpha:0.85;
+	dropShadowEnabled:false;		
+}
+
+.mdiWindowMenuBtn{
+	upSkin:        Embed(source="assets/img/applicationXP.png");
+	overSkin:      Embed(source="assets/img/applicationXP.png");
+	downSkin:      Embed(source="assets/img/applicationXP.png");
+	disabledSkin:  Embed(source="assets/img/applicationXP.png");
+}
+
+.winXPTitleStyle
+{
+	fontFamily: Verdana;
+	fontSize: 12;
+	fontWeight: normal;
+	letterSpacing: 1;
+   	color: #000066;
+}
+
+.mdiWindowFocus
+{
+	
+   borderColor: #0099ff;
+   borderAlpha: 0.90;
+   borderThicknessLeft: 4;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 4;
+   roundedBottomCorners: false;
+   highlightAlphas: 0.42, 0.1;
+   headerColors: #0033ff, #00ccff;
+   backgroundColor: #f5f5f5;
+   shadowDistance: 1;
+   shadowDirection: right;
+   dropShadowColor: #333333;
+   
+   letterSpacing: 1;
+   color: #000066;
+/*titleBackgroundSkin: Embed(source="assets/swf/WindowsAssets.swf", symbol="headerBgDefault");*/
+}
+
+.mdiWindowNoFocus
+{
+	borderColor: #0099ff;
+      borderThicknessLeft: 4;
+   borderThicknessTop: 0;
+   borderThicknessBottom: 4;
+   borderThicknessRight: 4;
+   roundedBottomCorners: false;
+   highlightAlphas: 0.42, 0.1;
+   headerColors: #0033ff, #00ccff;
+   backgroundColor: #f5f5f5;
+       shadowDistance: 1;
+   shadowDirection: right;
+   dropShadowColor: #333333;
+   
+   letterSpacing: 1;
+   color: #000066;
+/*	titleBackgroundSkin: Embed(source="assets/swf/WindowsAssets.swf", symbol="headerBgDefaultNoFocus");*/
+	
+}
+
+.mdiWindowMinimizeBtn
+{
+	upSkin:       Embed(source="assets/img/miniButton_pf_luz.png");
+	overSkin: 		Embed(source="assets/img/miniButton_pf_luz.png");
+	downSkin:      Embed(source="assets/img/miniButton_pf_luz.png");
+	disabledSkin:  Embed(source="assets/img/miniButton_pf_luz.png");
+}
+
+.mdiWindowMinimizeBtnNoFocus
+{
+	upSkin:        Embed(source="assets/img/miniButton_pf.png");
+	overSkin:      Embed(source="assets/img/miniButton_pf.png");
+	downSkin:      Embed(source="assets/img/miniButton_pf.png");
+	disabledSkin:  Embed(source="assets/img/miniButton_pf.png");
+}
+
+.mdiWindowMaximizeBtn
+{
+	upSkin:        Embed(source="assets/img/windowButton_pf_luz.png");
+	overSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	downSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	disabledSkin:  Embed(source="assets/img/windowButton_pf_luz.png");
+}
+
+.mdiWindowMaximizeBtnNoFocus
+{
+	upSkin:        Embed(source="assets/img/windowButton_pf.png");
+	overSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	downSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	disabledSkin:  Embed(source="assets/img/windowButton_pf_luz.png");
+}
+
+.mdiWindowRestoreBtn
+{
+	upSkin:        Embed(source="assets/img/windowButton_pf_luz.png");
+	overSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	downSkin:      Embed(source="assets/img/windowButton_pf_luz.png");
+	disabledSkin:  Embed(source="assets/img/windowButton_pf_luz.png");
+}
+
+.mdiWindowRestoreBtnNoFocus
+{
+	upSkin:        Embed(source="assets/img/windowButton_pf.png");
+	overSkin:      Embed(source="assets/img/windowButton_pf.png");
+	downSkin:      Embed(source="assets/img/windowButton_pf.png");
+	disabledSkin:  Embed(source="assets/img/windowButton_pf.png");
+}
+
+.mdiWindowCloseBtn
+{
+	upSkin:        Embed(source="assets/img/closeButton_pf_luz.png");
+	overSkin:      Embed(source="assets/img/closeButton_pf_luz.png");
+	downSkin:      Embed(source="assets/img/closeButton_pf_luz.png");
+	disabledSkin:  Embed(source="assets/img/closeButton_pf_luz.png");
+}
+
+.mdiWindowCloseBtnNoFocus
+{
+	upSkin:        Embed(source="assets/img/closeButton_pf.png");
+	overSkin:      Embed(source="assets/img/closeButton_pf.png");
+	downSkin:      Embed(source="assets/img/closeButton_pf.png");
+	disabledSkin:  Embed(source="assets/img/closeButton_pf.png");
+}

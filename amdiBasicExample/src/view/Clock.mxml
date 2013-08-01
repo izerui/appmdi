@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Text xmlns:mx="http://www.adobe.com/2006/mxml"
+	fontSize="10" 
+	fontWeight="bold" 
+	width="80" 
+	creationComplete="this.init();"  
+	textAlign="center" color="#FFFFFF">
+		<mx:Script>
+        <![CDATA[
+            import flash.utils.Timer;
+        	import flash.events.TimerEvent;
+        
+       
+        
+        private var timer:Timer;
+        
+        private function init():void {
+            this.timer = new Timer(1000);
+            this.timer.addEventListener(TimerEvent.TIMER, this.resetNow);
+            this.timer.start();
+        }
+        
+        
+        private function resetNow(event:TimerEvent):void {
+            this.text = new Date().toLocaleTimeString();
+        }
+                    
+        ]]>
+    </mx:Script>
+
+</mx:Text>
