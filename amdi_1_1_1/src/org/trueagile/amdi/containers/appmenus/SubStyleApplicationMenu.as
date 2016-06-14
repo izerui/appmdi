@@ -1,6 +1,7 @@
 package org.trueagile.amdi.containers.appmenus
 {
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	
 	import mx.containers.HBox;
@@ -15,6 +16,9 @@ package org.trueagile.amdi.containers.appmenus
 	import mx.styles.StyleManager;
 	
 	import org.trueagile.amdi.containers.MDIApplication;
+	
+	
+	[Event(name="userLableClick", type="flash.events.Event")]
 	
 	/**
 	 *  Reference to class  for SubStyleApplicationMenu, changes to this style
@@ -102,6 +106,10 @@ package org.trueagile.amdi.containers.appmenus
 			this._userImage.source=USER_IMAGE;
 			this._userLabel=new Label();
 			this._userLabel.text="User Name";
+			this._userLabel.addEventListener(MouseEvent.CLICK,function(e:MouseEvent):void{
+				var userLabelClick:Event = new Event("userLableClick");
+				dispatchEvent(userLabelClick);
+			});
 			this._imagePanel.addChild(this._userImage);
 			this._userBox.addChild(this._imagePanel);
 			this._userBox.addChild(this._userLabel);
