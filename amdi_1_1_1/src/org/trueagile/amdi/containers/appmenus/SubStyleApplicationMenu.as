@@ -80,6 +80,9 @@ package org.trueagile.amdi.containers.appmenus
 		
 		private var _userLabel:Label;
 		
+		//用户名下面的描述信息
+		private var _userDesc:Label;
+		
 		private var _isUserShow:Boolean = true;
 		
 		private static var classConstructed:Boolean = classConstruct();
@@ -112,7 +115,16 @@ package org.trueagile.amdi.containers.appmenus
 			});
 			this._imagePanel.addChild(this._userImage);
 			this._userBox.addChild(this._imagePanel);
-			this._userBox.addChild(this._userLabel);
+			
+			this._userDesc = new Label();
+			this._userDesc.text = "User Description";
+			
+			var vb:VBox = new VBox();
+			vb.addChild(this._userLabel);
+			vb.addChild(this._userDesc);
+			
+			this._userBox.addChild(vb);
+//			this._userBox.addChild(this._userLabel);
 			this._userBox.percentWidth=100;
 			this.addChildAt(_userBox,0);
 		}
@@ -500,6 +512,14 @@ package org.trueagile.amdi.containers.appmenus
 		 */
 		public function get isUserShow():Boolean{
 			return this._isUserShow;
+		}
+		
+		public function set userDesc(value:String):void{
+			this._userDesc.text = value;
+		}
+		
+		public function get userDesc():String{
+			return this._userDesc.text;
 		}
 
 		/**
