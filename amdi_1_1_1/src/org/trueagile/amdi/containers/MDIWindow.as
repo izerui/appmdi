@@ -16,10 +16,13 @@ package org.trueagile.amdi.containers
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.DisplayObject;
+	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
 	import flash.utils.getQualifiedClassName;
 	
 	import mx.collections.ArrayCollection;
@@ -27,7 +30,6 @@ package org.trueagile.amdi.containers
 	import mx.containers.Panel;
 	import mx.controls.Button;
 	import mx.controls.Image;
-	import mx.controls.Menu;
 	import mx.core.Application;
 	import mx.core.BitmapAsset;
 	import mx.core.Container;
@@ -42,7 +44,6 @@ package org.trueagile.amdi.containers
 	import mx.styles.CSSStyleDeclaration;
 	import mx.styles.StyleManager;
 	
-	import org.trueagile.amdi.containers.appmenus.RightMenuModellocator;
 	import org.trueagile.amdi.events.MDIWindowEvent;
 	import org.trueagile.amdi.managers.MDIManager;
 
@@ -537,6 +538,11 @@ package org.trueagile.amdi.containers
 		
 		
 		/**
+		 * Window's context menu.
+		 */
+		public var winContextMenu:ContextMenu = null;
+		
+		/**
 		 * Reference to MDIManager instance this window is managed by, if any.
 	     */
 		public var windowManager:MDIManager;
@@ -559,6 +565,7 @@ package org.trueagile.amdi.containers
 		private var backgroundAlphaRestore:Number = 0.5;
 		
 		public var menuBtn:MDIWindowMenuButton;
+		
 		
 		private var _dataProvider:Object;
 		
@@ -876,7 +883,18 @@ package org.trueagile.amdi.containers
 			windowState = MDIWindowState.NORMAL;
 			doubleClickEnabled = true;
 			windowControls = new MDIWindowControlsContainer();
-//			updateContextMenu();
+			updateContextMenu();
+		}
+		
+		/**
+		 * 添加子可见组件 屏蔽子组件的右键
+		 */
+		public function addChildUI(child:UIComponent):DisplayObject{
+			
+			var ct:ContextMenu = new ContextMenu;
+			ct.hideBuiltInItems();
+			child.contextMenu = ct;
+			return super.addChild(child);
 		}
 		
 		
@@ -1453,7 +1471,7 @@ package org.trueagile.amdi.containers
 			
 			// clicking anywhere brings window to front
 			addEventListener(MouseEvent.MOUSE_DOWN, bringToFrontProxy);
-//			contextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, bringToFrontProxy);//右键遮罩
+			contextMenu.addEventListener(ContextMenuEvent.MENU_SELECT, bringToFrontProxy);//右键遮罩
 		}
 		
 		/**
@@ -1862,7 +1880,7 @@ package org.trueagile.amdi.containers
 			_prevWindowState = _windowState;
 			_windowState = newState;
 			this.publicState = newState;
-//			updateContextMenu();
+			updateContextMenu();
 		}
 		
 		/**
@@ -1917,7 +1935,7 @@ package org.trueagile.amdi.containers
 			this.menuBtn.dataProvider = value;
 			updateStyles();
 		}
-				
+		
 		/**
 		 * Returns the xml that configures the menu window.
 		 * @return 
@@ -2024,66 +2042,124 @@ package org.trueagile.amdi.containers
 		/**
 		 * 显示右键
 		 */
-		public function showRightMenu():void
+		
+		public function updateContextMenu():void
 		{		
-			RightMenuModellocator.getInstance().removeMenu();
-			if(!isShowRightMenu){//如果不嗲用默认的系统右键菜单
-				return;
-			}
+			var defaultContextMenu:ContextMenu = new ContextMenu();
+			defaultContextMenu.hideBuiltInItems();
 			if (MDIApplication.WINDOW_CTX_MENU){
+				var minimizeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.minimizeText);
+				minimizeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				minimizeItem.enabled = windowState != MDIWindowState.MINIMIZED;
+				defaultContextMenu.customItems.push(minimizeItem);	
 				
-				var menuDataProvider:ArrayCollection = new ArrayCollection();
-				menuDataProvider.addItem({"label":MDIApplication.minimizeText,"enabled":windowState != MDIWindowState.MINIMIZED});
+				
 				if(maxEnabled){
-					menuDataProvider.addItem({"label":MDIApplication.maximizeText,"enabled":windowState != MDIWindowState.MAXIMIZED});
+					var maximizeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.maximizeText);
+					maximizeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+					maximizeItem.enabled = windowState != MDIWindowState.MAXIMIZED;
+					defaultContextMenu.customItems.push(maximizeItem);	
+					
 				}
-				menuDataProvider.addItem({"label":MDIApplication.restoreText,"enabled":windowState != MDIWindowState.NORMAL});
-				menuDataProvider.addItem({"label":MDIApplication.closeText});
-				menuDataProvider.addItem({"label":"separator","type":"separator"});
-				menuDataProvider.addItem({"label":MDIApplication.titleText});
-				menuDataProvider.addItem({"label":MDIApplication.titleFillText});
-				menuDataProvider.addItem({"label":MDIApplication.cascadeText});
-				menuDataProvider.addItem({"label":MDIApplication.restoreAllText});
-				menuDataProvider.addItem({"label":MDIApplication.minimizeAllText});
-				menuDataProvider.addItem({"label":MDIApplication.closeAllText});
 				
-				RightMenuModellocator.getInstance().menu = Menu.createMenu(this, menuDataProvider, false);  
+				var restoreItem:ContextMenuItem = new ContextMenuItem(MDIApplication.restoreText);
+				restoreItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				restoreItem.enabled = windowState != MDIWindowState.NORMAL;
+				defaultContextMenu.customItems.push(restoreItem);	
 				
-				RightMenuModellocator.getInstance().menu.labelField="label";
-				//				index.menu.iconFunction = rightMenuIcon;
-				RightMenuModellocator.getInstance().menu.variableRowHeight = true;     
-				RightMenuModellocator.getInstance().menu.addEventListener(MenuEvent.ITEM_CLICK, function (ev:MenuEvent):void{
-					menuItemSelectHandler(ev.label);
-				});       
+				var closeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.closeText);
+				closeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(closeItem);    
 				
-				//				var point:Point = new Point(mouseX,mouseY);  
-				//				point = localToGlobal(point);   
-				RightMenuModellocator.getInstance().menu.show(); 
+				var arrangeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.titleText);
+				arrangeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);	
+				arrangeItem.separatorBefore=true;
+				defaultContextMenu.customItems.push(arrangeItem);
 				
-				var screenRight:int = screen.right;
-				var screenBottom:int = screen.bottom;
-				var screenLeft:int = screen.left;
-				var _showX:int = stage.mouseX;
-				var _showY:int = stage.mouseY;
-				if(screenRight-stage.mouseX<RightMenuModellocator.getInstance().menu.width){
-					_showX = stage.mouseX-(RightMenuModellocator.getInstance().menu.width-(screenRight-stage.mouseX));
-					//					trace("stage.mouseX :"+stage.mouseX+" \t screenRight"+screenRight+" 差 "+(screenRight-stage.mouseX)+" 到右边");
-				}
-				if(screenBottom-stage.mouseY<RightMenuModellocator.getInstance().menu.height){
-					_showY = stage.mouseY-(RightMenuModellocator.getInstance().menu.height-(screenBottom-stage.mouseY));
-					//					trace("stage.mouseY :"+stage.mouseY+" \t screenBottom"+screenBottom+" 差 "+(screenBottom-stage.mouseY)+" 到底边");
-				}
-				RightMenuModellocator.getInstance().menu.move(_showX,_showY);
-				//				trace(menu.width);
-				//				trace(menu.height);
+				var arrangeFillItem:ContextMenuItem = new ContextMenuItem(MDIApplication.titleFillText);
+				arrangeFillItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);  	
+				defaultContextMenu.customItems.push(arrangeFillItem);
 				
+				var cascadeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.cascadeText);
+				cascadeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(cascadeItem);
+				
+				var restoreAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.restoreAllText);
+				restoreAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(restoreAllItem);
+				
+				var minimizeAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.minimizeAllText);
+				minimizeAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(minimizeAllItem);	
+				
+				var closeAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.closeAllText);
+				closeAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(closeAllItem);					
 			}
+			this.contextMenu = defaultContextMenu;
 		}
 		
-		private function menuItemSelectHandler(label:String):void
+		
+//		public function showRightMenu():void
+//		{		
+//			RightMenuModellocator.getInstance().removeMenu();
+//			if(!isShowRightMenu){//如果不嗲用默认的系统右键菜单
+//				return;
+//			}
+//			if (MDIApplication.WINDOW_CTX_MENU){
+//				
+//				var menuDataProvider:ArrayCollection = new ArrayCollection();
+//				menuDataProvider.addItem({"label":MDIApplication.minimizeText,"enabled":windowState != MDIWindowState.MINIMIZED});
+//				if(maxEnabled){
+//					menuDataProvider.addItem({"label":MDIApplication.maximizeText,"enabled":windowState != MDIWindowState.MAXIMIZED});
+//				}
+//				menuDataProvider.addItem({"label":MDIApplication.restoreText,"enabled":windowState != MDIWindowState.NORMAL});
+//				menuDataProvider.addItem({"label":MDIApplication.closeText});
+//				menuDataProvider.addItem({"label":"separator","type":"separator"});
+//				menuDataProvider.addItem({"label":MDIApplication.titleText});
+//				menuDataProvider.addItem({"label":MDIApplication.titleFillText});
+//				menuDataProvider.addItem({"label":MDIApplication.cascadeText});
+//				menuDataProvider.addItem({"label":MDIApplication.restoreAllText});
+//				menuDataProvider.addItem({"label":MDIApplication.minimizeAllText});
+//				menuDataProvider.addItem({"label":MDIApplication.closeAllText});
+//				
+//				RightMenuModellocator.getInstance().menu = Menu.createMenu(this, menuDataProvider, false);  
+//				
+//				RightMenuModellocator.getInstance().menu.labelField="label";
+//				//				index.menu.iconFunction = rightMenuIcon;
+//				RightMenuModellocator.getInstance().menu.variableRowHeight = true;     
+//				RightMenuModellocator.getInstance().menu.addEventListener(MenuEvent.ITEM_CLICK, function (ev:MenuEvent):void{
+//					menuItemSelectHandler(ev.label);
+//				});       
+//				
+//				//				var point:Point = new Point(mouseX,mouseY);  
+//				//				point = localToGlobal(point);   
+//				RightMenuModellocator.getInstance().menu.show(); 
+//				
+//				var screenRight:int = screen.right;
+//				var screenBottom:int = screen.bottom;
+//				var screenLeft:int = screen.left;
+//				var _showX:int = stage.mouseX;
+//				var _showY:int = stage.mouseY;
+//				if(screenRight-stage.mouseX<RightMenuModellocator.getInstance().menu.width){
+//					_showX = stage.mouseX-(RightMenuModellocator.getInstance().menu.width-(screenRight-stage.mouseX));
+//					//					trace("stage.mouseX :"+stage.mouseX+" \t screenRight"+screenRight+" 差 "+(screenRight-stage.mouseX)+" 到右边");
+//				}
+//				if(screenBottom-stage.mouseY<RightMenuModellocator.getInstance().menu.height){
+//					_showY = stage.mouseY-(RightMenuModellocator.getInstance().menu.height-(screenBottom-stage.mouseY));
+//					//					trace("stage.mouseY :"+stage.mouseY+" \t screenBottom"+screenBottom+" 差 "+(screenBottom-stage.mouseY)+" 到底边");
+//				}
+//				RightMenuModellocator.getInstance().menu.move(_showX,_showY);
+//				//				trace(menu.width);
+//				//				trace(menu.height);
+//				
+//			}
+//		}
+		
+		private function menuItemSelectHandler(event:ContextMenuEvent):void
 		{
 			this.windowManager.hideAllMenus();
-			switch(label)
+			switch(event.target.caption)
 			{
 				case(MDIApplication.minimizeText):
 					minimize();

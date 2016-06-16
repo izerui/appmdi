@@ -80,7 +80,7 @@ package org.trueagile.amdi.containers.appmenus
 		
 		private var _userLabel:Label;
 		
-		//鐢ㄦ埛鍚嶄笅闈㈢殑鎻忚堪淇℃伅
+		//用户名下面的描述信息
 		private var _userDesc:Label;
 		
 		private var _isUserShow:Boolean = true;

@@ -13,8 +13,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 package org.trueagile.amdi.containers
 {
+	
+	import flash.events.ContextMenuEvent;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.ui.ContextMenu;
+	import flash.ui.ContextMenuItem;
 	
 	import mx.collections.ArrayCollection;
 	import mx.containers.Canvas;
@@ -29,7 +33,6 @@ package org.trueagile.amdi.containers
 	import mx.styles.StyleManager;
 	
 	import org.trueagile.amdi.containers.appmenus.ApplicationMenu;
-	import org.trueagile.amdi.containers.appmenus.RightMenuModellocator;
 	import org.trueagile.amdi.effects.IMDIEffectsDescriptor;
 	import org.trueagile.amdi.events.DesktopRightClickEvent;
 	import org.trueagile.amdi.events.MDIManagerEvent;
@@ -114,6 +117,10 @@ package org.trueagile.amdi.containers
 		public static const VCOVER_FLOW_CONTAINER:String = 'VCoverFlowContainer';
 		public static const VISTA_FLOW_CONTAINER:String = 'VistaFlowContainer';
 		
+		[Bindable]
+		public static var versionInfo:String = "版本说明";
+		[Bindable]
+		public static var orderDesktopItems:String = "排列图标";
 		[Bindable]
 		public static var desktopText:String = '桌面首选项';
 		[Bindable]
@@ -396,6 +403,9 @@ package org.trueagile.amdi.containers
 //			this.addEventListener(FlexEvent.CREATION_COMPLETE,function(ev:FlexEvent):void{
 //				contextMenuInitData();
 //			});//创建右键菜单数据提供者
+			
+			this._applicationBar.addEventListener(FlexEvent.CREATION_COMPLETE,setControllBarContextMenu);
+			this.addEventListener(FlexEvent.CREATION_COMPLETE,setDesktopContextMenu);
 			this.horizontalScrollPolicy="off";
 			this.verticalScrollPolicy="off";
 			this.windowManager.addApplicationBarListeners(_applicationBar);
@@ -404,89 +414,81 @@ package org.trueagile.amdi.containers
 		}
 		
 		
+		
 		/**
-		 * When added to stage this function handle some visual configurations. 
+		 * 任务栏右键
 		 * @param event
 		 * 
 		 */
-		private function handleAddedToStage(event:Event):void{
-			this.vistaView=this._vistaView;
-			if (this._colapseBar == true){
-				this._applicationBar.handleZoom();
-			}
+		private function setControllBarContextMenu(event:FlexEvent):void{			
+			
+			var defaultContextMenu:ContextMenu = new ContextMenu();
+			defaultContextMenu.hideBuiltInItems();
+			if (MDIApplication.APP_CTX_MENU){	
+				var arrangeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.titleText);
+				arrangeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);	
+				defaultContextMenu.customItems.push(arrangeItem);
+				
+				var arrangeFillItem:ContextMenuItem = new ContextMenuItem(MDIApplication.titleFillText);
+				arrangeFillItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);  	
+				defaultContextMenu.customItems.push(arrangeFillItem);
+				
+				var cascadeItem:ContextMenuItem = new ContextMenuItem(MDIApplication.cascadeText);
+				cascadeItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(cascadeItem);
+				
+				var restoreAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.restoreAllText);
+				restoreAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(restoreAllItem);	
+				
+				var minimizeAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.minimizeAllText);
+				minimizeAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(minimizeAllItem);	
+				
+				var closeAllItem:ContextMenuItem = new ContextMenuItem(MDIApplication.closeAllText);
+				closeAllItem.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);
+				defaultContextMenu.customItems.push(closeAllItem);	
+			}    	
+			this._applicationBar.contextMenu = defaultContextMenu;				
+			
 		}
 		
 		/**
-		 * 是否使用右键
+		 * 桌面右键
 		 */
-		public var isShowRightMenu:Boolean = true;
 		
-		
-		//右键点击目标对象是否是任务栏.bar 默认是否
-		public function showRightMenu(isAplicationBar:Boolean=false):void{
-			RightMenuModellocator.getInstance().removeMenu();
-			if(!isShowRightMenu){//如果不是用右键
-				return;
-			}
-			var menuDataProvider:ArrayCollection = new ArrayCollection(
-				[
-					{"label":MDIApplication.titleText},
-					{"label":MDIApplication.titleFillText},
-					{"label":MDIApplication.cascadeText},
-					{"label":"separator","type":"separator"},
-					{"label":MDIApplication.restoreAllText},
-					{"label":MDIApplication.minimizeAllText},
-					{"label":"separator","type":"separator"},
-					{"label":MDIApplication.closeAllText}
-				]
-			);
+		private function setDesktopContextMenu(event:FlexEvent):void{			
 			
-			if(!isAplicationBar){//如果是点击的桌面,就加入桌面首选项等label
-				menuDataProvider.addItem({"label":"separator","type":"separator"});
-				menuDataProvider.addItem({"label":MDIApplication.desktopText});
-			}
-			RightMenuModellocator.getInstance().menu = Menu.createMenu(this, menuDataProvider, false);  
-			
-			RightMenuModellocator.getInstance().menu.labelField="label";
-			//				index.menu.iconFunction = rightMenuIcon;
-			RightMenuModellocator.getInstance().menu.variableRowHeight = true;     
-			RightMenuModellocator.getInstance().menu.addEventListener(MenuEvent.ITEM_CLICK, function (ev:MenuEvent):void{
-				rightMenuItemSelectHandler(ev.label);
-			});       
-			
-			//				var point:Point = new Point(mouseX,mouseY);  
-			//				point = localToGlobal(point);   
-			RightMenuModellocator.getInstance().menu.show(); 
-			
-			var screenRight:int = screen.right;
-			var screenBottom:int = screen.bottom;
-			var screenLeft:int = screen.left;
-			var _showX:int = stage.mouseX;
-			var _showY:int = stage.mouseY;
-			if(screenRight-stage.mouseX<RightMenuModellocator.getInstance().menu.width){
-				_showX = stage.mouseX-(RightMenuModellocator.getInstance().menu.width-(screenRight-stage.mouseX));
-				//					trace("stage.mouseX :"+stage.mouseX+" \t screenRight"+screenRight+" 差 "+(screenRight-stage.mouseX)+" 到右边");
-			}
-			if(screenBottom-stage.mouseY<RightMenuModellocator.getInstance().menu.height){
-				_showY = stage.mouseY-(RightMenuModellocator.getInstance().menu.height-(screenBottom-stage.mouseY));
-				//					trace("stage.mouseY :"+stage.mouseY+" \t screenBottom"+screenBottom+" 差 "+(screenBottom-stage.mouseY)+" 到底边");
-			}
-			RightMenuModellocator.getInstance().menu.move(_showX,_showY);
-			//				trace(menu.width);
-			//				trace(menu.height);
+			var defaultContextMenu:ContextMenu = new ContextMenu();
+			defaultContextMenu.hideBuiltInItems();
+			if (MDIApplication.APP_CTX_MENU){	
+				var orderDesktopItems:ContextMenuItem = new ContextMenuItem(MDIApplication.orderDesktopItems);
+				orderDesktopItems.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);  	
+				defaultContextMenu.customItems.push(orderDesktopItems);
+				
+				var desktopText:ContextMenuItem = new ContextMenuItem(MDIApplication.desktopText);
+				desktopText.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);	
+				defaultContextMenu.customItems.push(desktopText);
+				
+				var versionInfo:ContextMenuItem = new ContextMenuItem(MDIApplication.versionInfo);
+				versionInfo.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT, menuItemSelectHandler);	
+				defaultContextMenu.customItems.push(versionInfo);
+				
+			}    	
+			this.contextMenu = defaultContextMenu;				
 			
 		}
 		
 		
 		/**
-		 * 根据右键操作方式触发
-		 * @param label
+		 *Select the behavior to be used acording to the menu option. 
+		 * @param event
 		 * 
 		 */		
-		public function rightMenuItemSelectHandler(operation:String):void
+		private function menuItemSelectHandler(event:ContextMenuEvent):void
 		{
 			this.windowManager.hideAllMenus();
-			switch(operation)
+			switch(event.target.caption)
 			{	
 				case(MDIApplication.titleText):
 					this.windowManager.tile(false, this.windowManager.tilePadding);
@@ -507,19 +509,143 @@ package org.trueagile.amdi.containers
 				case(MDIApplication.minimizeAllText):
 					this.windowManager.minimizeAll();
 					break;			
-
+				
 				case(MDIApplication.closeAllText):
 					this.windowManager.closeAll();
 					break;
-
+				
 				case(MDIApplication.restoreAllText):
 					this.windowManager.showAllWindows();
 					break;		
 				default:
-					dispatchEvent(new DesktopRightClickEvent(DesktopRightClickEvent.DESKTOP_RIGHTCLICK_EVENT,operation));
+					dispatchEvent(new DesktopRightClickEvent(DesktopRightClickEvent.DESKTOP_RIGHTCLICK_EVENT,event.target.caption));
 					break;
 			}
 		}
+		
+		
+		
+		
+		
+		
+		/**
+		 * When added to stage this function handle some visual configurations. 
+		 * @param event
+		 * 
+		 */
+		private function handleAddedToStage(event:Event):void{
+			this.vistaView=this._vistaView;
+			if (this._colapseBar == true){
+				this._applicationBar.handleZoom();
+			}
+		}
+		
+//		/**
+//		 * 是否使用右键
+//		 */
+//		public var isShowRightMenu:Boolean = true;
+//		
+//		
+//		//右键点击目标对象是否是任务栏.bar 默认是否
+//		public function showRightMenu(isAplicationBar:Boolean=false):void{
+//			RightMenuModellocator.getInstance().removeMenu();
+//			if(!isShowRightMenu){//如果不是用右键
+//				return;
+//			}
+//			var menuDataProvider:ArrayCollection = new ArrayCollection(
+//				[
+//					{"label":MDIApplication.titleText},
+//					{"label":MDIApplication.titleFillText},
+//					{"label":MDIApplication.cascadeText},
+//					{"label":"separator","type":"separator"},
+//					{"label":MDIApplication.restoreAllText},
+//					{"label":MDIApplication.minimizeAllText},
+//					{"label":"separator","type":"separator"},
+//					{"label":MDIApplication.closeAllText}
+//				]
+//			);
+//			
+//			if(!isAplicationBar){//如果是点击的桌面,就加入桌面首选项等label
+//				menuDataProvider.addItem({"label":"separator","type":"separator"});
+//				menuDataProvider.addItem({"label":MDIApplication.orderDesktopItems});
+//				menuDataProvider.addItem({"label":MDIApplication.desktopText});
+//				
+//			}
+//			RightMenuModellocator.getInstance().menu = Menu.createMenu(this, menuDataProvider, false);  
+//			
+//			RightMenuModellocator.getInstance().menu.labelField="label";
+//			//				index.menu.iconFunction = rightMenuIcon;
+//			RightMenuModellocator.getInstance().menu.variableRowHeight = true;     
+//			RightMenuModellocator.getInstance().menu.addEventListener(MenuEvent.ITEM_CLICK, function (ev:MenuEvent):void{
+//				rightMenuItemSelectHandler(ev.label);
+//			});       
+//			
+//			//				var point:Point = new Point(mouseX,mouseY);  
+//			//				point = localToGlobal(point);   
+//			RightMenuModellocator.getInstance().menu.show(); 
+//			
+//			var screenRight:int = screen.right;
+//			var screenBottom:int = screen.bottom;
+//			var screenLeft:int = screen.left;
+//			var _showX:int = stage.mouseX;
+//			var _showY:int = stage.mouseY;
+//			if(screenRight-stage.mouseX<RightMenuModellocator.getInstance().menu.width){
+//				_showX = stage.mouseX-(RightMenuModellocator.getInstance().menu.width-(screenRight-stage.mouseX));
+//				//					trace("stage.mouseX :"+stage.mouseX+" \t screenRight"+screenRight+" 差 "+(screenRight-stage.mouseX)+" 到右边");
+//			}
+//			if(screenBottom-stage.mouseY<RightMenuModellocator.getInstance().menu.height){
+//				_showY = stage.mouseY-(RightMenuModellocator.getInstance().menu.height-(screenBottom-stage.mouseY));
+//				//					trace("stage.mouseY :"+stage.mouseY+" \t screenBottom"+screenBottom+" 差 "+(screenBottom-stage.mouseY)+" 到底边");
+//			}
+//			RightMenuModellocator.getInstance().menu.move(_showX,_showY);
+//			//				trace(menu.width);
+//			//				trace(menu.height);
+//			
+//		}
+		
+		
+//		/**
+//		 * 根据右键操作方式触发
+//		 * @param label
+//		 * 
+//		 */		
+//		public function rightMenuItemSelectHandler(operation:String):void
+//		{
+//			this.windowManager.hideAllMenus();
+//			switch(operation)
+//			{	
+//				case(MDIApplication.titleText):
+//					this.windowManager.tile(false, this.windowManager.tilePadding);
+//					break;
+//				
+//				case(MDIApplication.titleFillText):
+//					this.windowManager.tile(true, this.windowManager.tilePadding);
+//					break;
+//				
+//				case(MDIApplication.cascadeText):
+//					this.windowManager.cascade();
+//					break;
+//				
+//				case(MDIApplication.showAllText):
+//					this.windowManager.showAllWindows();
+//					break;
+//				
+//				case(MDIApplication.minimizeAllText):
+//					this.windowManager.minimizeAll();
+//					break;			
+//
+//				case(MDIApplication.closeAllText):
+//					this.windowManager.closeAll();
+//					break;
+//
+//				case(MDIApplication.restoreAllText):
+//					this.windowManager.showAllWindows();
+//					break;		
+//				default:
+//					dispatchEvent(new DesktopRightClickEvent(DesktopRightClickEvent.DESKTOP_RIGHTCLICK_EVENT,operation));
+//					break;
+//			}
+//		}
 		
 		/**
 		 * Creat the child windows on creation complete event.
@@ -978,12 +1104,11 @@ package org.trueagile.amdi.containers
 		}		
 		
 		private function updateAllContextMenus():void{
-			//不再调用默认的 contextMenu右键菜单了.没啥用.
-//			this.contextMenuInitData();
-//			//子窗口默认不加载右键数据. 只是在触发的时候加载并且显示出来
-//			for each (var window : MDIWindow in this.windowManager.windowList){
-//				window.updateContextMenu();
-//			}
+			this.setControllBarContextMenu(null);
+//			this.setDesktopContextMenu(null);
+			for each (var window : MDIWindow in this.windowManager.windowList){
+				window.updateContextMenu();
+			}
 			
 		}
 
@@ -1031,7 +1156,7 @@ package org.trueagile.amdi.containers
 			
 			this.menuButton.dataProvider = value;
 		}
-
+		
 		/**
 		 * Returns the application bar Menu using a XML
 		 * @Return
